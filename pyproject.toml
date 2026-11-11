@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "table-qa"
+version = "0.0.1"
+description = "Ask a spreadsheet a question in plain language and get the answer, a chart and the steps."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Modelshifts", email = "info@modelshifts.com" }]
+dependencies = ["pandas>=2", "openpyxl>=3.1"]
+
+[project.optional-dependencies]
+api = ["openai>=1.40"]
+hf = ["transformers>=4.45", "torch>=2.3"]
+
+[project.urls]
+Homepage = "https://modelshifts.com/work"
+Repository = "https://github.com/ModelShifts/table-qa"
+
+[project.scripts]
+table-qa = "table_qa.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/table_qa"]
