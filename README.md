@@ -15,11 +15,13 @@
 
 ## Features
 
+Planned for v1. Progress is tracked in the Roadmap below.
+
 - **Excel and CSV**: upload a file; sheets and headers are detected automatically.
 - **Plain-language questions**: "Which region grew fastest last quarter?"
 - **Answer and chart**: a direct answer plus a chart when one helps.
 - **The steps**: the exact operations used, shown as readable steps and as code you can rerun.
-- **Sandboxed execution**: generated code runs in a restricted sandbox, never on your raw files.
+- **Sandboxed execution**: generated code runs in a restricted sandbox and never modifies your original file.
 
 > **Data.** Examples use synthetic or public data only.
 
