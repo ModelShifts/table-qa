@@ -37,8 +37,8 @@ flowchart TB
   X --> ST["Steps + code"]:::ink
   subgraph BK["Backend · pick one"]
     direction LR
-    A["<b>(a) Your API key</b><br/>OpenAI-compatible<br/>LLM"]:::rust
-    H["<b>(b) Hugging Face</b><br/>Qwen2.5-Coder-7B-Instruct<br/>run locally"]:::rust
+    BKA["<b>(a) Your API key</b><br/>OpenAI-compatible<br/>LLM"]:::rust
+    BKH["<b>(b) Hugging Face</b><br/>Qwen2.5-Coder-7B-Instruct<br/>run locally"]:::rust
   end
   BK -.-> G
 
