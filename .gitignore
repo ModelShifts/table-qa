@@ -8,6 +8,7 @@ dist/
 venv/
 .env
 .pytest_cache/
+.gradio/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
