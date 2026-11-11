@@ -78,10 +78,6 @@ pip install -e .
 table-qa ask sales.xlsx "Which region grew fastest last quarter?"
 ```
 
-## Try it
-
-> **Coming soon.** A hosted demo will be linked here and on [modelshifts.com/work](https://modelshifts.com/work).
-
 ## Roadmap
 
 - [x] Repository scaffold and README
