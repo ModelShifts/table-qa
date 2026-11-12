@@ -1,0 +1,169 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+  "backend": "hf",
+  "results": [
+    {
+      "id": "latest_order_date",
+      "file": "sales.xlsx",
+      "question": "What is the latest order date?",
+      "expected": "2026-09-15",
+      "value": "2026-09-15",
+      "answer": "The latest order date is 2026-09-15.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Access the 'sales' sheet from the 'tables' dictionary.",
+        "Extract the 'order_date' column from the 'sales' sheet.",
+        "Find the maximum value in the 'order_date' column."
+      ],
+      "code": "import pandas as pd\n\n# Access the 'sales' sheet from the 'tables' dictionary\nsales = tables['sales']\n\n# Extract the 'order_date' column from the 'sales' sheet\norder_dates = sales['order_date']\n\n# Find the maximum value in the 'order_date' column\nlatest_order_date = order_dates.max()\nanswer = latest_order_date\n",
+      "error": null,
+      "elapsed": 34.471,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": "model"
+    },
+    {
+      "id": "total_revenue",
+      "file": "sales.xlsx",
+      "question": "What is the total revenue?",
+      "expected": 43290,
+      "value": 43290,
+      "answer": "The total revenue calculated from the sales data is $43,290.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Load the sales sheet into a DataFrame called `sales`.",
+        "Calculate the total revenue by summing the `revenue` column from the `sales` DataFrame."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet into a DataFrame\nsales = tables['sales']\n\n# Calculate the total revenue\ntotal_revenue = sales['revenue'].sum()\n\n# Print the result\nprint(total_revenue)\nanswer = total_revenue\n",
+      "error": null,
+      "elapsed": 42.391,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": "model"
+    },
+    {
+      "id": "top_region",
+      "file": "sales.xlsx",
+      "question": "Which region has the highest total revenue?",
+      "expected": "North",
+      "value": "North",
+      "answer": "The region with the highest total revenue is North.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": true,
+      "chart_ok": true,
+      "steps": [
+        "Load the sales and returns sheets into DataFrames.",
+        "Calculate the total revenue for each region by summing the revenue column.",
+        "Find the region with the highest total revenue using idxmax."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales and returns sheets into DataFrames\nsales = tables['sales']\nreturns = tables['returns']\n\n# Calculate the total revenue for each region\ntotal_revenue = sales.groupby('region')['revenue'].sum()\n\n# Find the region with the highest total revenue\nhighest_region = total_revenue.idxmax()\nanswer = highest_region\nchart_df = total_revenue.to_frame().reset_index()\nchart_type = \"bar\"\nchart_x = \"region\"\nchart_y = \"revenue\"\nchart_title = \"Total Revenue by Region\"",
+      "error": null,
+      "elapsed": 61.828,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": "model"
+    },
+    {
+      "id": "top_product",
+      "file": "sales.xlsx",
+      "question": "Which product sold the most units?",
+      "expected": "Ash",
+      "value": null,
+      "answer": "",
+      "value_ok": false,
+      "prose_ok": false,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the sales and returns sheets into DataFrames.",
+        "Merge the two DataFrames based on the region and product columns.",
+        "Calculate the total units for each product by summing the units from both the sales and returns DataFrames.",
+        "Find the product with the highest total units using the idxmax method."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales and returns sheets into DataFrames\nsales = pd.read_excel('sales.xlsx')\nreturns = pd.read_excel('returns.xlsx')\n\n# Merge the two DataFrames based on the region and product columns\nmerged = pd.merge(sales, returns, on=['region', 'product'], how='outer')\n\n# Calculate the total units for each product by summing the units from both the sales and returns DataFrames\ntotal_units = merged.groupby(['region', 'product'])['units'].sum().reset_index()\n\n# Find the product with the highest total units using the idxmax method\nmost_sold_product = total_units.loc[total_units['units'].idxmax(), 'product']\n\nanswer = f\"The product that sold the most units is {most_sold_product}.\"\nchart_df = total_units.sort_values(by='units', ascending=False).head(10)\nchart_type = \"bar\"\nchart_x = \"product\"\nchart_y = \"units\"\nchart_title = \"Top Selling Products\"",
+      "error": "Traceback (most recent call last):\n  File \"/workspace/src/table_qa/sandbox_runner.py\", line 56, in main\n    exec(compile(code, \"analysis.py\", \"exec\"), namespace)\n  File \"analysis.py\", line 11, in <module>\n  File \"/tmp/tableqa-venv/lib/python3.12/site-packages/pandas/core/groupby/generic.py\", line 3002, in __getitem__\n    return super().__getitem__(key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/tableqa-venv/lib/python3.12/site-packages/pandas/core/base.py\", line 241, in __getitem__\n    raise KeyError(f\"Column not found: {key}\")\nKeyError: 'Column not found: units'\n",
+      "elapsed": 137.905,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": ""
+    },
+    {
+      "id": "fastest_growth",
+      "file": "sales.xlsx",
+      "question": "Which region grew fastest last quarter?",
+      "expected": "East",
+      "value": null,
+      "answer": "",
+      "value_ok": false,
+      "prose_ok": false,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the sales and returns sheets into DataFrames.",
+        "Filter the sales DataFrame for the latest quarter.",
+        "Calculate the growth rate for each region by comparing the revenue in the latest quarter to the revenue in the previous quarter.",
+        "Find the region with the highest growth rate.",
+        "Return the result as a string."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales and returns sheets into DataFrames\nsales = tables['sales']\nreturns = tables['returns']\n\n# Filter the sales DataFrame for the latest quarter\nlatest_quarter_sales = sales[sales['order_date'].dt.to_period('Q') == '2026Q3']\n\n# Calculate the growth rate for each region\ngrowth_rates = latest_quarter_sales.groupby('region')['revenue'].transform(lambda x: (x.max() - x.min()) / x.min())\n\n# Find the region with the highest growth rate\nfastest_growing_region = growth_rates.idxmax()\n\n# Return the result as a string\nanswer = f\"The region that grew fastest last quarter was {fastest_growing_region}.\"",
+      "error": "Compute percentage growth with to_period('Q'). Use this shape, with the sales sheet, and set answer to the region name:\nframe = tables['sales'].copy()\nframe['quarter'] = frame['order_date'].dt.to_period('Q')\nlast_q = frame['quarter'].max()\ncurrent = frame[frame['quarter'] == last_q].groupby('region')['revenue'].sum()\nprior = frame[frame['quarter'] == (last_q - 1)].groupby('region')['revenue'].sum()\ngrowth = ((current - prior) / prior)\nanswer = growth.idxmax()\nchart_df = growth.rename('growth').reset_index()\nchart_type = 'bar'\nchart_x = 'region'\nchart_y = 'growth'\nchart_title = 'Growth by region'",
+      "elapsed": 137.179,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": ""
+    },
+    {
+      "id": "most_returns",
+      "file": "sales.xlsx",
+      "question": "Which region has the most returned units?",
+      "expected": "South",
+      "value": null,
+      "answer": "",
+      "value_ok": false,
+      "prose_ok": false,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the sales and returns sheets into DataFrames.",
+        "Filter the sales DataFrame to include only the latest quarter.",
+        "Calculate the total units returned for each region.",
+        "Find the region with the highest total units returned."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales and returns sheets into DataFrames\nsales = pd.read_excel('sales.xlsx')\nreturns = pd.read_excel('returns.xlsx')\n\n# Filter the sales DataFrame to include only the latest quarter\nlatest_quarter_sales = sales[sales['order_date'].dt.to_period('Q') == '2026Q3']\n\n# Calculate the total units returned for each region\ntotal_units_returned = latest_quarter_sales.groupby('region')['units'].sum()\n\n# Find the region with the highest total units returned\nregion_with_most_returns = total_units_returned.idxmax()\nanswer = region_with_most_returns\nchart_df = latest_quarter_sales[latest_quarter_sales['region'] == region_with_most_returns]\nchart_type = \"bar\"\nchart_x = \"region\"\nchart_y = \"units\"\nchart_title = \"Units Returned by Region\"",
+      "error": "Traceback (most recent call last):\n  File \"/workspace/src/table_qa/sandbox_runner.py\", line 56, in main\n    exec(compile(code, \"analysis.py\", \"exec\"), namespace)\n  File \"analysis.py\", line 11, in <module>\n  File \"/tmp/tableqa-venv/lib/python3.12/site-packages/pandas/core/groupby/generic.py\", line 3002, in __getitem__\n    return super().__getitem__(key)\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/tableqa-venv/lib/python3.12/site-packages/pandas/core/base.py\", line 241, in __getitem__\n    raise KeyError(f\"Column not found: {key}\")\nKeyError: 'Column not found: units'\n",
+      "elapsed": 107.083,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": ""
+    },
+    {
+      "id": "csv_total_revenue",
+      "file": "sales.csv",
+      "question": "What is the total revenue?",
+      "expected": 43290,
+      "value": "43290",
+      "answer": "The total revenue calculated from the sales sheet is $43,290.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Load the sales sheet from the tables dictionary.",
+        "Calculate the total revenue by summing up all the revenue values in the sales sheet."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet from the tables dictionary\nsales = tables['sales']\n\n# Calculate the total revenue\ntotal_revenue = sales['revenue'].sum()\n\n# Convert the total revenue to a string\nanswer = str(total_revenue)",
+      "error": null,
+      "elapsed": 41.447,
+      "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + Qwen/Qwen2.5-1.5B-Instruct",
+      "backend": "hf",
+      "answer_source": "model"
+    }
+  ]
+}

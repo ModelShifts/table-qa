@@ -1,0 +1,173 @@
+{
+  "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+  "backend": "api",
+  "results": [
+    {
+      "id": "latest_order_date",
+      "file": "sales.xlsx",
+      "question": "What is the latest order date?",
+      "expected": "2026-09-15",
+      "value": "2026-09-15",
+      "answer": "The latest order date is 2026-09-15.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Run the analysis."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet into a DataFrame\nsales_df = tables['sales']\n\n# Find the latest order date and format it as YYYY-MM-DD\nlatest_order_date = sales_df['order_date'].max().strftime('%Y-%m-%d')\nanswer = latest_order_date\n",
+      "error": null,
+      "elapsed": 24.864,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    },
+    {
+      "id": "total_revenue",
+      "file": "sales.xlsx",
+      "question": "What is the total revenue?",
+      "expected": 43290,
+      "value": 43290,
+      "answer": "The total revenue is 43,290.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Load the 'sales' sheet into a DataFrame named `sales_df`.",
+        "Calculate the total revenue by summing the 'revenue' column of `sales_df`."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet into a DataFrame\nsales_df = tables['sales']\n\n# Calculate the total revenue\ntotal_revenue = sales_df['revenue'].sum()\nanswer = total_revenue\n",
+      "error": null,
+      "elapsed": 31.041,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    },
+    {
+      "id": "top_region",
+      "file": "sales.xlsx",
+      "question": "Which region has the highest total revenue?",
+      "expected": "North",
+      "value": "East",
+      "answer": "East has the highest total revenue.",
+      "value_ok": false,
+      "prose_ok": false,
+      "chart": true,
+      "chart_ok": true,
+      "steps": [
+        "Load the 'sales' sheet into a DataFrame named `sales_df`.",
+        "Filter the sales data to include only the latest quarter (2026Q3).",
+        "Group the filtered data by region and calculate the total revenue for each region.",
+        "Find the region with the highest total revenue using idxmax().",
+        "Set chart_df to the grouped table, chart_type to \"bar\", chart_x to the 'region' column, chart_y to the 'revenue' column, and chart_title to \"Total Revenue by Region\"."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet into a DataFrame named sales_df\nsales_df = tables['sales']\n\n# Filter the sales data to include only the latest quarter (2026Q3)\nlatest_q3_sales = sales_df[sales_df['order_date'].dt.to_period('Q') == '2026Q3']\n\n# Group the filtered data by region and calculate the total revenue for each region\ntotal_revenue_by_region = latest_q3_sales.groupby('region')['revenue'].sum()\n\n# Find the region with the highest total revenue using idxmax()\nhighest_revenue_region = total_revenue_by_region.idxmax()\n\n# Set chart_df to the grouped table, chart_type to \"bar\", chart_x to the 'region' column, chart_y to the 'revenue' column, and chart_title to \"Total Revenue by Region\"\nchart_df = latest_q3_sales.groupby('region')['revenue'].sum()\nchart_type = \"bar\"\nchart_x = 'region'\nchart_y = 'revenue'\nchart_title = \"Total Revenue by Region\"\nanswer = highest_revenue_region\n",
+      "error": null,
+      "elapsed": 60.307,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    },
+    {
+      "id": "top_product",
+      "file": "sales.xlsx",
+      "question": "Which product sold the most units?",
+      "expected": "Ash",
+      "value": "Ash",
+      "answer": "The result is Ash.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the 'sales' sheet into a DataFrame named `sales_df`.",
+        "Filter the sales data to include only the latest quarter (2026Q3).",
+        "Group the filtered data by product and sum the units.",
+        "Find the product with the highest total units."
+      ],
+      "code": "import pandas as pd\n\n# Load the 'sales' sheet into a DataFrame named `sales_df`\nsales_df = tables['sales']\n\n# Filter the sales data to include only the latest quarter (2026Q3)\nlatest_q3_sales = sales_df[sales_df['order_date'].dt.to_period('Q') == '2026Q3']\n\n# Group the filtered data by product and sum the units\nproduct_units_sum = latest_q3_sales.groupby('product')['units'].sum()\n\n# Find the product with the highest total units\nmost_sold_product = product_units_sum.idxmax()\nanswer = most_sold_product\n",
+      "error": null,
+      "elapsed": 51.448,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "fallback"
+    },
+    {
+      "id": "fastest_growth",
+      "file": "sales.xlsx",
+      "question": "Which region grew fastest last quarter?",
+      "expected": "East",
+      "value": "East",
+      "answer": "East grew fastest last quarter.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the 'sales' sheet into a DataFrame named `frame`.",
+        "Extract the quarter from the `order_date` column and convert it to a period using `to_period('Q')`. Store this in a new column named `quarter`.",
+        "Find the maximum quarter value (`last_q`) in the `quarter` column.",
+        "Filter the `frame` to include only rows where the `quarter` matches `last_q`.",
+        "Group the filtered DataFrame by `region` and calculate the sum of `revenue` for each region.",
+        "Repeat steps 3-5 for the quarter before `last_q`.",
+        "Compute the percentage growth between the current quarter and the previous quarter using `(current - prior) / prior`.",
+        "Find the region with the highest growth rate using `idxmax()`.",
+        "Create a new DataFrame named `chart_df` with columns 'region' and 'growth'.",
+        "Set `chart_type` to 'bar', `chart_x` to 'region', `chart_y` to 'growth', and `chart_title` to 'Growth by region'."
+      ],
+      "code": "import pandas as pd\n\n# Load the 'sales' sheet into a DataFrame named frame\nframe = tables['sales'].copy()\n\n# Extract the quarter from the order_date column and convert it to a period using to_period('Q')\nframe['quarter'] = frame['order_date'].dt.to_period('Q')\n\n# Find the maximum quarter value (last_q) in the quarter column\nlast_q = frame['quarter'].max()\n\n# Filter the frame to include only rows where the quarter matches last_q\ncurrent = frame[frame['quarter'] == last_q].groupby('region')['revenue'].sum()\nprior = frame[frame['quarter'] == (last_q - 1)].groupby('region')['revenue'].sum()\n\n# Compute the percentage growth between the current quarter and the previous quarter using (current - prior) / prior\ngrowth = ((current - prior) / prior)\n\n# Find the region with the highest growth rate using idxmax()\nanswer = growth.idxmax()\n\n# Create a new DataFrame named chart_df with columns 'region' and",
+      "error": null,
+      "elapsed": 103.462,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    },
+    {
+      "id": "most_returns",
+      "file": "sales.xlsx",
+      "question": "Which region has the most returned units?",
+      "expected": "South",
+      "value": "South",
+      "answer": "The region with the most returned units is South.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": false,
+      "steps": [
+        "Load the 'returns' sheet into a DataFrame named `returns_df`.",
+        "Group the `returns_df` by region and sum the units.",
+        "Find the region with the maximum sum of units."
+      ],
+      "code": "import pandas as pd\n\n# Load the returns sheet into a DataFrame\nreturns_df = tables['returns']\n\n# Group the returns_df by region and sum the units\ngrouped_returns = returns_df.groupby('region')['units'].sum()\n\n# Find the region with the maximum sum of units\nmost_returning_region = grouped_returns.idxmax()\nanswer = most_returning_region\n",
+      "error": null,
+      "elapsed": 38.37,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    },
+    {
+      "id": "csv_total_revenue",
+      "file": "sales.csv",
+      "question": "What is the total revenue?",
+      "expected": 43290,
+      "value": 43290,
+      "answer": "The total revenue is 43,290.",
+      "value_ok": true,
+      "prose_ok": true,
+      "chart": false,
+      "chart_ok": true,
+      "steps": [
+        "Load the 'sales' sheet into a DataFrame named `df`.",
+        "Calculate the total revenue by summing the 'revenue' column."
+      ],
+      "code": "import pandas as pd\n\n# Load the sales sheet into a DataFrame\ndf = tables['sales']\n\n# Calculate the total revenue\ntotal_revenue = df['revenue'].sum()\n\n# Answer: The total revenue is 1200.\nanswer = total_revenue\n",
+      "error": null,
+      "elapsed": 20.073,
+      "model": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "backend": "api",
+      "answer_source": "model"
+    }
+  ]
+}
