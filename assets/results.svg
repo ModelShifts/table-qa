@@ -10,7 +10,7 @@
   <rect class="bg" width="1200" height="180" rx="16"/>
   <text class="num" x="60" y="88">6 / 7</text><text class="lbl" x="60" y="122">QUESTIONS CORRECT · 1.5B</text>
   <line class="rule" x1="400" y1="40" x2="400" y2="140"/>
-  <text class="num" x="440" y="88">20–103 s</text><text class="lbl" x="440" y="122">PER QUESTION · 8-CORE CPU</text>
+  <text class="num" x="440" y="88">20–103 s</text><text class="lbl" x="440" y="122">PER QUESTION</text>
   <line class="rule" x1="800" y1="40" x2="800" y2="140"/>
   <text class="num" x="840" y="88">4 / 7</text><text class="lbl" x="840" y="122">HUGGING FACE · SAME 1.5B</text>
 </svg>

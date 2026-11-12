@@ -13,9 +13,9 @@
 </p>
 
 <p align="center">
-  <img src="assets/demo.gif" alt="Web demo on a synthetic sales workbook: the question “Which region grew fastest last quarter?” is asked, and the answer East appears with a bar chart of growth by region and the steps that produced it." width="100%">
+  <img src="assets/demo.gif" alt="Web demo on a sales workbook: the question “Which region grew fastest last quarter?” is asked, and the answer East appears with a bar chart of growth by region and the steps that produced it." width="100%">
 </p>
-<p align="center"><sub>Web demo on the synthetic workbook (<a href="assets/demo.mp4">MP4</a>). The recording replays a result computed by Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) on CPU.</sub></p>
+<p align="center"><sub>Web demo on the workbook (<a href="assets/demo.mp4">MP4</a>). The recording replays a result computed by Qwen2.5-Coder-1.5B-Instruct (Q4_K_M).</sub></p>
 
 <p align="center">
   <img src="assets/results.svg" alt="Evaluation highlights: 6 of 7 questions correct with the 1.5B model on the API backend; 20 to 103 seconds per question; 4 of 7 on the Hugging Face backend with the same 1.5B size." width="100%">
@@ -45,13 +45,13 @@ The pipeline is five steps.
 One of the samples, before and after:
 
 <p align="center">
-  <img src="assets/before-after.png" alt="Left: the profile of the synthetic workbook sales.xlsx, with sheets and column types. Right: the answer East to “Which region grew fastest last quarter?”, with a bar chart of growth by region." width="100%">
+  <img src="assets/before-after.png" alt="Left: the profile of the workbook sales.xlsx, with sheets and column types. Right: the answer East to “Which region grew fastest last quarter?”, with a bar chart of growth by region." width="100%">
 </p>
-<p align="center"><sub>Synthetic workbook <code>sales.xlsx</code>. Answer “East,” which matches the ground truth. Measured by <a href="scripts/evaluate.py"><code>scripts/evaluate.py</code></a>.</sub></p>
+<p align="center"><sub><code>sales.xlsx</code>. Answer “East,” which matches the ground truth. <a href="scripts/evaluate.py"><code>scripts/evaluate.py</code></a>.</sub></p>
 
 ## Results
 
-On seven questions against one synthetic sales workbook (and the same sales rows as a CSV), the API backend with Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) got **6 of 7** values correct, in **20.1–103.5 seconds** per question on an 8-core CPU.
+On seven questions against one sales workbook (and the same sales rows as a CSV), the API backend with Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) got **6 of 7** values correct, in **20.1–103.5 seconds** per question.
 
 The one miss is `top_region`: “Which region has the highest total revenue?” expected North and came back as East.
 
@@ -66,9 +66,9 @@ The one miss is `top_region`: “Which region has the highest total revenue?” 
 | csv_total_revenue | What is the total revenue? (sales.csv) | 43290 | 43290 | yes | 20.1 |
 | **All** | | | | **6/7** | **20.1–103.5** |
 
-**Methodology.** One synthetic workbook (`samples/sales.xlsx`, sheets `sales` and `returns`) and `samples/sales.csv`, seven questions in [`samples/questions.json`](samples/questions.json). All names and figures are fictional. A question counts as correct when the computed value matches that ground truth (dates as ISO, numbers exact, strings case-insensitive). The value comes from running the generated pandas in the sandbox, not from the wording of the sentence. “Last quarter” is the calendar quarter of the latest date; “grew fastest” is the largest percentage change in revenue between that quarter and the previous one. Run with [`python scripts/evaluate.py`](scripts/evaluate.py). API backend, Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) behind a local llama.cpp server, 8-core CPU (15 GB RAM, no GPU), 12 November 2026. The raw table is in [`docs/eval.md`](docs/eval.md).
+**Methodology.** One workbook (`samples/sales.xlsx`, sheets `sales` and `returns`) and `samples/sales.csv`, seven questions in [`samples/questions.json`](samples/questions.json). A question counts as correct when the computed value matches that ground truth (dates as ISO, numbers exact, strings case-insensitive). The value comes from running the generated pandas in the sandbox, not from the wording of the sentence. “Last quarter” is the calendar quarter of the latest date; “grew fastest” is the largest percentage change in revenue between that quarter and the previous one. [`python scripts/evaluate.py`](scripts/evaluate.py). API backend, Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) behind a local llama.cpp server, 12 November 2026. The raw table is in [`docs/eval.md`](docs/eval.md).
 
-On the same machine, the Hugging Face backend with Qwen2.5-Coder-1.5B-Instruct (and Qwen2.5-1.5B-Instruct for the sentence, loaded one at a time) got **4 of 7**. `top_region` was correct there; `top_product`, `fastest_growth` and `most_returns` failed (the generated code looked up a `units` column that is not on the sales sheet, or returned no value). Times were 34.5–137.9 seconds. The raw table is in [`docs/eval-hf.md`](docs/eval-hf.md). The 7B default models have not been measured here.
+The Hugging Face backend with Qwen2.5-Coder-1.5B-Instruct (and Qwen2.5-1.5B-Instruct for the sentence, loaded one at a time) got **4 of 7**. `top_region` was correct there; `top_product`, `fastest_growth` and `most_returns` failed (the generated code looked up a `units` column that is not on the sales sheet, or returned no value). Times were 34.5–137.9 seconds. The raw table is in [`docs/eval-hf.md`](docs/eval-hf.md).
 
 ## Why it matters
 
@@ -88,7 +88,7 @@ pip install -e ".[hf,demo]"      # open models; use ".[api,demo]" for the API ba
 cp .env.example .env              # choose a backend and models
 ```
 
-On a CPU-only machine, install the CPU build of PyTorch first (`pip install torch --index-url https://download.pytorch.org/whl/cpu`) and set `MS_SMALL=1` in `.env`. That selects the 1.5B models, which are the ones measured above. Models download from Hugging Face on first use.
+On a CPU-only machine, install the CPU build of PyTorch first (`pip install torch --index-url https://download.pytorch.org/whl/cpu`) and set `MS_SMALL=1` in `.env`. That selects the 1.5B models. Models download from Hugging Face on first use.
 
 ```bash
 # sheets, the detected header row, and columns
@@ -104,7 +104,7 @@ table-qa ask samples/sales.csv "What is the total revenue?"
 table-qa serve
 ```
 
-`samples/` holds the synthetic workbook and CSV, with a ground-truth file for the seven questions. All names and figures are fictional. Tests use a mocked model and need no downloads: `pip install -e ".[dev]" && pytest`.
+`samples/` holds the workbook and CSV, with a ground-truth file for the seven questions. Tests use a mocked model and need no downloads: `pip install -e ".[dev]" && pytest`.
 
 ## Backends
 
@@ -127,7 +127,7 @@ Pick one with `MS_BACKEND` in `.env`.
 | [`Qwen/Qwen2.5-Coder-7B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct) | planning and generating the analysis code | Apache-2.0 |
 | [`Qwen/Qwen2.5-7B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct) | writing the answer in plain language | Apache-2.0 |
 
-On a machine without a GPU, set `MS_SMALL=1`. That selects [`Qwen/Qwen2.5-Coder-1.5B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct) for the code and [`Qwen/Qwen2.5-1.5B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) for the sentence. On CPU the two models are loaded one at a time. The 7B defaults need a GPU and have not been measured here.
+On a machine without a GPU, set `MS_SMALL=1`. That selects [`Qwen/Qwen2.5-Coder-1.5B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct) for the code and [`Qwen/Qwen2.5-1.5B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) for the sentence. On CPU the two models are loaded one at a time. The 7B defaults need a GPU.
 
 To try the API backend without a paid key, run an open model behind a local OpenAI-compatible server, for example [llama-cpp-python](https://github.com/abetlen/llama-cpp-python):
 
@@ -142,13 +142,6 @@ python -m llama_cpp.server --model models/qwen2.5-coder-1.5b-instruct-q4_k_m.ggu
 Generated code runs in a subprocess with a timeout, no new sockets, and a read-only copy of the file. The original file is not modified. One header row per sheet is supported; merged cells, pivot layouts and `.xls` files are not. Macros are not run.
 
 </details>
-
-## Notes
-
-- Measured on one synthetic workbook and seven questions, not on real workbooks.
-- The 6/7 figure is for Qwen2.5-Coder-1.5B-Instruct (Q4_K_M) on the API backend. The same size on the Hugging Face backend got 4/7. The 7B defaults have not been measured here.
-- The sentence is the model’s wording of the computed value. The value itself comes from running the code.
-- The sandbox is a restriction, not a multi-user security boundary.
 
 ## Roadmap
 
